@@ -5,8 +5,11 @@
   "config.journeyrecruits.nameShowMaxZoom": "Приближение для появления названия",
   "config.journeyrecruits.nameShowMaxZoom.tooltip": "При каком уровне зума показывается название государства. Больше значение — название видно при более отдалённом виде карты. Обычно 1–5.",
 
-  "config.journeyrecruits.labelFontScale": "Размер шрифта названия",
-  "config.journeyrecruits.labelFontScale.tooltip": "Масштаб шрифта названия государства на карте (1.0 — стандарт, 2–4 — крупнее).",
+  "config.journeyrecruits.labelFontScaleFullscreen": "Размер шрифта названия на большой карте",
+  "config.journeyrecruits.labelFontScaleFullscreen.tooltip": "Масштаб шрифта названия государства на большой карте (2.5 — стандарт, 2–4 — крупнее).",
+
+  "config.journeyrecruits.labelFontScaleMinimap": "Размер шрифта названия на миникарте",
+  "config.journeyrecruits.labelFontScaleMinimap.tooltip": "Масштаб шрифта названия государства на миникарте (1.5 — стандарт, 2–4 — крупнее).",
 
   "config.journeyrecruits.showLabelOnMinimap": "Показывать название на миникарте",
   "config.journeyrecruits.showLabelOnMinimap.tooltip": "Отображать название государства на миникарте в углу экрана (если поддерживается JourneyMap)."

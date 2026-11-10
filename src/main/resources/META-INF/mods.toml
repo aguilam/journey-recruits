@@ -4,11 +4,12 @@ license = "MIT"
 
 [[mods]]
 modId = "journeyrecruits"
-version = "1.0.0"
+version = "1.0.1"
 displayName = "Journey Recruits"
 authors = "Aguilam"
 description = "Shows Recruits territories on JourneyMap"
 displayURL = "https://github.com/aguilam/journey-recruits"
+logoFile = "assets/journeyrecruits/icon.jpg"
 
 [[dependencies.journeyrecruits]]
     modId = "forge"
@@ -27,7 +28,7 @@ displayURL = "https://github.com/aguilam/journey-recruits"
 [[dependencies.journeyrecruits]]
     modId = "journeymap"
     mandatory = true
-    versionRange = "[5.9,)"
+    versionRange = "[1.20.1-6.0,)"
     ordering = "AFTER"
     side = "CLIENT"
 

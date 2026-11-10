@@ -1,16 +1,16 @@
 package com.aguilam.journeyrecruits;
 
 import com.aguilam.journeyrecruits.config.RecruitBridgeConfig;
-import journeymap.client.api.ClientPlugin;
-import journeymap.client.api.IClientAPI;
-import journeymap.client.api.IClientPlugin;
-import journeymap.client.api.display.MarkerOverlay;
-import journeymap.client.api.display.PolygonOverlay;
-import journeymap.client.api.event.ClientEvent;
-import journeymap.client.api.model.MapImage;
-import journeymap.client.api.model.MapPolygon;
-import journeymap.client.api.model.ShapeProperties;
-import journeymap.client.api.model.TextProperties;
+import journeymap.api.v2.client.IClientAPI;
+import journeymap.api.v2.client.IClientPlugin;
+import journeymap.api.v2.client.display.MarkerOverlay;
+import journeymap.api.v2.client.display.PolygonOverlay;
+import journeymap.api.v2.client.model.MapImage;
+import journeymap.api.v2.client.model.MapPolygon;
+import journeymap.api.v2.client.model.ShapeProperties;
+import journeymap.api.v2.client.model.TextProperties;
+import journeymap.api.v2.common.Context;
+import journeymap.api.v2.common.JourneyMapPlugin;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -24,7 +24,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
-@ClientPlugin
+@JourneyMapPlugin(apiVersion = "2.0.0")
 public class JMPlugin implements IClientPlugin {
 
     static JMPlugin INSTANCE;
@@ -77,9 +77,6 @@ public class JMPlugin implements IClientPlugin {
     public String getModId() {
         return RecruitBridgeMod.MOD_ID;
     }
-
-    @Override
-    public void onEvent(ClientEvent event) {}
 
     public boolean isReady() {
         return api != null;
@@ -163,9 +160,8 @@ public class JMPlugin implements IClientPlugin {
                         .setFillColor(data.color)
                         .setFillOpacity(0.4f);
 
-                    String polyId = "cl_" + factionId + "_" + i;
                     PolygonOverlay overlay = new PolygonOverlay(
-                        RecruitBridgeMod.MOD_ID, polyId, dim, shape, polygon
+                        RecruitBridgeMod.MOD_ID, dim, shape, polygon
                     );
                     overlay.setTitle(claimName);
 
@@ -174,37 +170,58 @@ public class JMPlugin implements IClientPlugin {
 
                 BlockPos centerPos = calculateCenter(data.allChunks);
 
-                MapImage icon = new MapImage(ICON_LOC, 0, 0, 16, 16, data.color, 0.01f);
-                icon.setAnchorX(8);
-                icon.setAnchorY(8);
+                if (data.displayName != null) {
+                    String label = data.displayName.toUpperCase();
 
-                String markerId = "lbl_" + factionId;
-                MarkerOverlay marker = new MarkerOverlay(
-                    RecruitBridgeMod.MOD_ID, markerId, centerPos, icon
-                );
-                marker.setDimension(dim);
-                marker.setLabel(data.displayName.toUpperCase());
+                    showLabelMarker(centerPos, data.color, dim, label,
+                        RecruitBridgeConfig.CLIENT.labelFontScaleFullscreen.get(),
+                        Context.UI.Fullscreen, Context.UI.Webmap);
 
-                try {
-                    double scale = RecruitBridgeConfig.CLIENT.labelFontScale.get();
-                    double maxZoom = RecruitBridgeConfig.CLIENT.nameShowMaxZoom.get();
-                    TextProperties tp = new TextProperties()
-                        .setColor(0xFFFFFF)
-                        .setScale((float) scale)
-                        .setMaxZoom((int) Math.round(maxZoom));
-                    marker.setTextProperties(tp);
-                } catch (Exception ignored) {
+                    if (RecruitBridgeConfig.CLIENT.showLabelOnMinimap.get()) {
+                        showLabelMarker(centerPos, data.color, dim, label,
+                            RecruitBridgeConfig.CLIENT.labelFontScaleMinimap.get(),
+                            Context.UI.Minimap);
+                    }
                 }
-
-                if (RecruitBridgeConfig.CLIENT.showLabelOnMinimap.get()) {
-                    setOverlayDisplayOnMinimap(marker, true);
-                }
-
-                try { api.show(marker); } catch (Exception ignored) {}
             }
 
         } catch (Exception e) {
             logger.error("[RecruitBridge-JM] Error drawing claims", e);
+        }
+    }
+
+    /**
+     * Creates a marker that draws only the faction label (the icon itself is almost transparent).
+     * A separate marker per UI group is needed because TextProperties has a single font scale
+     * and the minimap/fullscreen labels use different sizes.
+     */
+    private void showLabelMarker(BlockPos pos, int color, ResourceKey<Level> dim, String label,
+                                 double fontScale, Context.UI... uis) {
+        try {
+            MapImage icon = new MapImage(ICON_LOC, 0, 0, 16, 16, color, 0.01f);
+            icon.setAnchorX(8);
+            icon.setAnchorY(8);
+
+            MarkerOverlay marker = new MarkerOverlay(RecruitBridgeMod.MOD_ID, pos, icon);
+            marker.setDimension(dim);
+            marker.setLabel(label);
+
+            // JourneyMap 6 (API 2.0) measures zoom in pixels-per-block: zoom = 512 * (px per block).
+            // The config keeps the old JourneyMap 5 scale, where zoom = 2^level (blockSize).
+            double nameShowMaxZoom = RecruitBridgeConfig.CLIENT.nameShowMaxZoom.get();
+            int maxZoom = (int) Math.round(512.0 * Math.pow(2.0, nameShowMaxZoom));
+            TextProperties tp = new TextProperties()
+                .setColor(0xFFFFFF)
+                .setScale((float) fontScale)
+                .setMaxZoom(maxZoom);
+            marker.setTextProperties(tp);
+
+            // setActiveUIs also updates TextProperties, so it must come after setTextProperties.
+            marker.setActiveUIs(uis);
+
+            api.show(marker);
+        } catch (Exception e) {
+            logger.debug("[RecruitBridge-JM] Error showing label", e);
         }
     }
 
@@ -269,17 +286,5 @@ public class JMPlugin implements IClientPlugin {
             logger.error("Reflection setup failed", e);
             reflectionFailed = true;
         }
-    }
-
-    private void setOverlayDisplayOnMinimap(MarkerOverlay overlay, boolean showOnMinimap) {
-        try {
-            for (String methodName : new String[] { "setDisplayOnMinimap", "setShowOnMinimap", "setMinimapVisible" }) {
-                try {
-                    Method m = overlay.getClass().getMethod(methodName, boolean.class);
-                    m.invoke(overlay, showOnMinimap);
-                    return;
-                } catch (NoSuchMethodException ignored) {}
-            }
-        } catch (Exception ignored) {}
     }
 }

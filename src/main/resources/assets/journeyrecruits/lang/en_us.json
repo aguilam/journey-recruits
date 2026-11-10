@@ -5,8 +5,11 @@
   "config.journeyrecruits.nameShowMaxZoom": "Zoom level for label visibility",
   "config.journeyrecruits.nameShowMaxZoom.tooltip": "At which zoom level the state name appears. Higher value means the label is visible when the map is more zoomed out. Typically 1–5.",
 
-  "config.journeyrecruits.labelFontScale": "Label font size",
-  "config.journeyrecruits.labelFontScale.tooltip": "Scale of the state name font on the map (1.0 = default, 2–4 = larger).",
+  "config.journeyrecruits.labelFontScaleFullscreen": "Label font size on the fullscreen map",
+  "config.journeyrecruits.labelFontScaleFullscreen.tooltip": "Scale of the state name font on the fullscreen map (2.5 = default, 2–4 = larger).",
+
+  "config.journeyrecruits.labelFontScaleMinimap": "Label font size on the minimap",
+  "config.journeyrecruits.labelFontScaleMinimap.tooltip": "Scale of the state name font on the minimap (1.5 = default, 2–4 = larger).",
 
   "config.journeyrecruits.showLabelOnMinimap": "Show label on minimap",
   "config.journeyrecruits.showLabelOnMinimap.tooltip": "Show the state name on the minimap in the corner of the screen (if supported by JourneyMap)."

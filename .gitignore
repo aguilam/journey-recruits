@@ -7,7 +7,6 @@ build/libs/
 
 .vscode/
 
-config/
 .cache/
 logs/
 *.log

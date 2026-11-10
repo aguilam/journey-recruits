@@ -16,7 +16,7 @@ RecruitBridge integrates claims from the **Recruits** mod into **JourneyMap** ov
 
 - JourneyMap (client API)
 - Recruits mod
-- (Optional) Cloth Config + AutoConfig for in-game config GUI
+- (Optional) Cloth Config for in-game config GUI
 
 Adjust JDK / Forge version according to the Minecraft version you target.
 
@@ -28,7 +28,7 @@ Adjust JDK / Forge version according to the Minecraft version you target.
 
 ## Configuration
 
-- If the build uses **Cloth Config + AutoConfig**, open the Mod Options / Config screen (or Mod Menu) to edit:
+- If the build uses **Cloth Config**, open the Mod Options / Config screen (or Mod Menu) to edit:
   - `nameAppearMaxZoom` — maximum map zoom at which faction labels appear.
   - `fontScale` — multiplier for faction label size.
   - `showOnMinimap` — toggle showing labels on minimap (may not be supported depending on JourneyMap version).
@@ -40,8 +40,6 @@ Adjust JDK / Forge version according to the Minecraft version you target.
 From the project root (Gradle wrapper included):
 
 ```bash
-# Run the client (dev environment)
-./gradlew runClient
 
 # Build the release jar
 ./gradlew build
