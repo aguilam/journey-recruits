@@ -1,6 +1,6 @@
 package com.aguilam.journeyrecruits.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class RecruitBridgeConfig {
 
@@ -8,32 +8,27 @@ public class RecruitBridgeConfig {
 
     public static class Client {
 
-        public final ForgeConfigSpec.DoubleValue nameShowMaxZoom;
-        public final ForgeConfigSpec.DoubleValue labelFontScaleFullscreen;
-        public final ForgeConfigSpec.DoubleValue labelFontScaleMinimap;
-        public final ForgeConfigSpec.BooleanValue showLabelOnMinimap;
+        public final ModConfigSpec.DoubleValue nameShowMaxZoom;
+        public final ModConfigSpec.DoubleValue labelFontScaleFullscreen;
+        public final ModConfigSpec.DoubleValue labelFontScaleMinimap;
+        public final ModConfigSpec.BooleanValue showLabelOnMinimap;
 
-        public Client(ForgeConfigSpec.Builder builder) {
-            builder.comment(" Настройки отображения названий государств на карте JourneyMap ")
-                    .push(CATEGORY_LABELS);
+        public Client(ModConfigSpec.Builder builder) {
+            builder.push(CATEGORY_LABELS);
 
             nameShowMaxZoom = builder
-                    .comment(" При каком приближении (зуме) появляется название государства. Больше значение = название видно при более отдалённом виде. Обычно 1–5. ")
                     .translation("config.journeyrecruits.nameShowMaxZoom")
                     .defineInRange("nameShowMaxZoom", 2.0, 0.5, 10.0);
 
             labelFontScaleFullscreen = builder
-                    .comment(" Размер шрифта названия государства на большой карте (1.0 = стандарт, 2–4 = крупнее). ")
                     .translation("config.journeyrecruits.labelFontScaleFullscreen")
                     .defineInRange("labelFontScaleFullscreen", 2.5, 0.5, 8.0);
 
             labelFontScaleMinimap = builder
-                    .comment(" Размер шрифта названия государства на миникарте (1.0 = стандарт, 2–4 = крупнее). ")
                     .translation("config.journeyrecruits.labelFontScaleMinimap")
                     .defineInRange("labelFontScaleMinimap", 1.5, 0.5, 8.0);
 
             showLabelOnMinimap = builder
-                    .comment(" Показывать название на миникарте в углу экрана. ")
                     .translation("config.journeyrecruits.showLabelOnMinimap")
                     .define("showLabelOnMinimap", true);
 
@@ -41,11 +36,11 @@ public class RecruitBridgeConfig {
         }
     }
 
-    public static final ForgeConfigSpec CLIENT_SPEC;
+    public static final ModConfigSpec CLIENT_SPEC;
     public static final Client CLIENT;
 
     static {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
         CLIENT = new Client(builder);
         CLIENT_SPEC = builder.build();
     }

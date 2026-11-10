@@ -1,0 +1,47 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+
+[[mods]]
+modId = "journeyrecruits"
+version = "1.0.1"
+displayName = "Journey Recruits"
+authors = "Aguilam"
+description = "Shows Recruits territories on JourneyMap"
+displayURL = "https://github.com/aguilam/journey-recruits"
+logoFile = "assets/journeyrecruits/icon.png"
+
+[[dependencies.journeyrecruits]]
+    modId = "neoforge"
+    type = "required"
+    versionRange = "[21.1,)"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.journeyrecruits]]
+    modId = "minecraft"
+    type = "required"
+    versionRange = "[1.21.1,1.22)"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.journeyrecruits]]
+    modId = "journeymap"
+    type = "required"
+    versionRange = "[1.21.1-6.0,)"
+    ordering = "AFTER"
+    side = "CLIENT"
+
+[[dependencies.journeyrecruits]]
+    modId = "recruits"
+    type = "required"
+    versionRange = "[1.15,)"
+    ordering = "AFTER"
+    side = "BOTH"
+
+[[dependencies.journeyrecruits]]
+    modId = "cloth_config"
+    type = "optional"
+    versionRange = "[15,)"
+    ordering = "AFTER"
+    side = "CLIENT"

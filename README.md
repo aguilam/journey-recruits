@@ -10,37 +10,36 @@ RecruitBridge integrates claims from the **Recruits** mod into **JourneyMap** ov
 
 - Show per-chunk claim polygons grouped by faction.
 - Display faction name at claim center.
-- Configurable label scale, visibility zoom level, and minimap toggle.
+- Configurable label visibility zoom level and minimap toggle.
 
 ## Dependencies
 
-- JourneyMap (client API)
+- Minecraft 1.21.1
+- NeoForge 21.1.x
+- JourneyMap
 - Recruits mod
-- (Optional) Cloth Config for in-game config GUI
-
-Adjust JDK / Forge version according to the Minecraft version you target.
+- (Optional) Cloth Config for the in-game config GUI
 
 ## Installation
 
 1. Build the mod (see _Building from source_).
 2. Copy the resulting `.jar` into your Minecraft `mods/` folder.
-3. Launch the game with the matching Forge profile and required mods.
+3. Launch the game with the matching NeoForge profile and the required mods.
 
 ## Configuration
 
-- If the build uses **Cloth Config**, open the Mod Options / Config screen (or Mod Menu) to edit:
-  - `nameAppearMaxZoom` — maximum map zoom at which faction labels appear.
-  - `fontScale` — multiplier for faction label size.
-  - `showOnMinimap` — toggle showing labels on minimap (may not be supported depending on JourneyMap version).
+Open the Mod Options / Config screen (Cloth Config) or edit `config/journeyrecruits-client.toml`:
 
-- If using the plain **ForgeConfigSpec** variant, edit the generated TOML files in the `config/` folder.
+- `nameShowMaxZoom` — maximum map zoom at which faction labels appear.
+- `labelFontScaleFullscreen` — faction label size on the fullscreen map (default `2.5`).
+- `labelFontScaleMinimap` — faction label size on the minimap (default `1.5`).
+- `showLabelOnMinimap` — toggle showing labels on the minimap.
 
 ## Building from source
 
 From the project root (Gradle wrapper included):
 
 ```bash
-
 # Build the release jar
 ./gradlew build
 # Built jar will be in build/libs/

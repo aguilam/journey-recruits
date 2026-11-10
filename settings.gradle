@@ -1,7 +1,22 @@
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        maven { url = 'https://maven.minecraftforge.net/' }
+    }
+}
+
+plugins {
+    id 'net.neoforged.moddev.repositories' version '2.0.148'
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        // Mirror of maven.shedaniel.me (Cloth Config): the official host is unreachable
+        // from some networks, while this mirror proxies it.
+        maven {
+            name = 'Shedaniel Mirror'
+            url = 'https://maven.creeperhost.net/'
+        }
     }
 }
 

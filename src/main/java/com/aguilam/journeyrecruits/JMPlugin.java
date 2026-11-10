@@ -3,13 +3,13 @@ package com.aguilam.journeyrecruits;
 import com.aguilam.journeyrecruits.config.RecruitBridgeConfig;
 import journeymap.api.v2.client.IClientAPI;
 import journeymap.api.v2.client.IClientPlugin;
+import journeymap.api.v2.client.display.Context;
 import journeymap.api.v2.client.display.MarkerOverlay;
 import journeymap.api.v2.client.display.PolygonOverlay;
 import journeymap.api.v2.client.model.MapImage;
 import journeymap.api.v2.client.model.MapPolygon;
 import journeymap.api.v2.client.model.ShapeProperties;
 import journeymap.api.v2.client.model.TextProperties;
-import journeymap.api.v2.common.Context;
 import journeymap.api.v2.common.JourneyMapPlugin;
 
 import net.minecraft.client.Minecraft;
@@ -24,6 +24,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
+@SuppressWarnings("deprecation")
 @JourneyMapPlugin(apiVersion = "2.0.0")
 public class JMPlugin implements IClientPlugin {
 
@@ -53,7 +54,7 @@ public class JMPlugin implements IClientPlugin {
     };
 
     private static final ResourceLocation ICON_LOC =
-        new ResourceLocation("journeymap", "ui/img/waypoint-icon.png");
+        ResourceLocation.fromNamespaceAndPath("journeymap", "ui/img/waypoint-icon.png");
 
     private static class FactionData {
         final String displayName;
@@ -190,11 +191,6 @@ public class JMPlugin implements IClientPlugin {
         }
     }
 
-    /**
-     * Creates a marker that draws only the faction label (the icon itself is almost transparent).
-     * A separate marker per UI group is needed because TextProperties has a single font scale
-     * and the minimap/fullscreen labels use different sizes.
-     */
     private void showLabelMarker(BlockPos pos, int color, ResourceKey<Level> dim, String label,
                                  double fontScale, Context.UI... uis) {
         try {
@@ -206,8 +202,6 @@ public class JMPlugin implements IClientPlugin {
             marker.setDimension(dim);
             marker.setLabel(label);
 
-            // JourneyMap 6 (API 2.0) measures zoom in pixels-per-block: zoom = 512 * (px per block).
-            // The config keeps the old JourneyMap 5 scale, where zoom = 2^level (blockSize).
             double nameShowMaxZoom = RecruitBridgeConfig.CLIENT.nameShowMaxZoom.get();
             int maxZoom = (int) Math.round(512.0 * Math.pow(2.0, nameShowMaxZoom));
             TextProperties tp = new TextProperties()
@@ -216,7 +210,6 @@ public class JMPlugin implements IClientPlugin {
                 .setMaxZoom(maxZoom);
             marker.setTextProperties(tp);
 
-            // setActiveUIs also updates TextProperties, so it must come after setTextProperties.
             marker.setActiveUIs(uis);
 
             api.show(marker);
